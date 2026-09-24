@@ -36,10 +36,12 @@ export const withMermaid = (config: UserConfig) => {
     "dayjs",
     "cytoscape-cose-bilkent",
     "cytoscape",
+    // CJS modules that mermaid imports — must be pre-bundled by Vite
+    // to convert CJS default exports to proper ESM default exports.
+    // Without this, production builds fail with:
+    // "does not provide an export named 'default'"
+    "elkjs",
   ];
-
-  // Note: "debug" removed from optimizeDeps — it causes resolve failures
-  // in mermaid 12 which no longer depends on it directly.
 
   if (!config.vite.resolve) config.vite.resolve = {};
 
@@ -65,6 +67,13 @@ export const withMermaid = (config: UserConfig) => {
       ...config.vite.resolve.alias,
       ...mermaidPluginAlias,
     };
+  }
+
+  // SSR config: mark CJS-only deps as noExternal so Vite transforms them
+  if (!config.vite.ssr) config.vite.ssr = {};
+  if (!config.vite.ssr.noExternal) config.vite.ssr.noExternal = [];
+  if (Array.isArray(config.vite.ssr.noExternal)) {
+    config.vite.ssr.noExternal.push("mermaid");
   }
 
   return config;

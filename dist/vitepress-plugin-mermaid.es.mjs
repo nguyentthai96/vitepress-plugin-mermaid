@@ -62,7 +62,8 @@ var r = (t) => {
 		"@braintree/sanitize-url",
 		"dayjs",
 		"cytoscape-cose-bilkent",
-		"cytoscape"
+		"cytoscape",
+		"elkjs"
 	], t.vite.resolve || (t.vite.resolve = {});
 	let i = {
 		"dayjs/plugin/advancedFormat.js": "dayjs/esm/plugin/advancedFormat",
@@ -76,7 +77,7 @@ var r = (t) => {
 	}))] : t.vite.resolve.alias = {
 		...t.vite.resolve.alias,
 		...i
-	} : t.vite.resolve.alias = i, t;
+	} : t.vite.resolve.alias = i, t.vite.ssr || (t.vite.ssr = {}), t.vite.ssr.noExternal || (t.vite.ssr.noExternal = []), Array.isArray(t.vite.ssr.noExternal) && t.vite.ssr.noExternal.push("mermaid"), t;
 };
 //#endregion
 export { e as MermaidMarkdown, n as MermaidPlugin, r as withMermaid };
