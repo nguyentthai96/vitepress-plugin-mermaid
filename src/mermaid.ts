@@ -1,11 +1,14 @@
-import mermaid, { ExternalDiagramDefinition, MermaidConfig } from "mermaid";
+import mermaid from "mermaid";
+import type { ExternalDiagramDefinition, MermaidConfig } from "mermaid";
 
 export const init = async (externalDiagrams: ExternalDiagramDefinition[]) => {
   try {
-    if (mermaid.registerExternalDiagrams)
+    // registerExternalDiagrams is available in mermaid 10, 11, and 12
+    if (mermaid.registerExternalDiagrams) {
       await mermaid.registerExternalDiagrams(externalDiagrams);
+    }
   } catch (e) {
-    console.error(e);
+    console.error("[vitepress-plugin-mermaid] Failed to register external diagrams:", e);
   }
 };
 
@@ -14,7 +17,6 @@ export const render = async (
   code: string,
   config: MermaidConfig
 ): Promise<string> => {
-  // await init;
   mermaid.initialize(config);
   const { svg } = await mermaid.render(id, code);
   return svg;

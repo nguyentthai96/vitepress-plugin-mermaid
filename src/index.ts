@@ -31,12 +31,16 @@ export const withMermaid = (config: UserConfig) => {
 
   config.vite.optimizeDeps.include = [
     ...config.vite.optimizeDeps.include,
+    "mermaid",
     "@braintree/sanitize-url",
     "dayjs",
-    "debug",
     "cytoscape-cose-bilkent",
     "cytoscape",
   ];
+
+  // Note: "debug" removed from optimizeDeps — it causes resolve failures
+  // in mermaid 12 which no longer depends on it directly.
+
   if (!config.vite.resolve) config.vite.resolve = {};
 
   const mermaidPluginAlias = {

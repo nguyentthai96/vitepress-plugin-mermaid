@@ -1,12 +1,12 @@
 {
   "name": "vitepress-plugin-mermaid",
-  "version": "2.0.17",
+  "version": "2.1.0",
   "description": "Add mermaid support for Vitepress",
   "type": "module",
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
+    "build": "vite build && cp dist/src/Mermaid.vue dist/Mermaid.vue && cp dist/src/mermaid.ts dist/mermaid.ts",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs"
@@ -39,16 +39,17 @@
   },
   "homepage": "https://github.com/emersonbottero/vitepress-plugin-mermaid#readme",
   "peerDependencies": {
-    "mermaid": "10 || 11",
+    "mermaid": "10 || 11 || 12",
     "vitepress": "^1.0.0 || ^1.0.0-alpha"
   },
-  "optionalDependencies": {
-    "@mermaid-js/mermaid-mindmap": "^9.3.0"
-  },
   "devDependencies": {
-    "vite-plugin-dts": "^3.0.3",
-    "vite-plugin-static-copy": "^0.13.1",
-    "vitepress": "^1.0.0",
-    "vite": "5"
+    "@typescript/typescript6": "^6.0.2",
+    "@vue/language-core": "^3.3.11",
+    "mermaid": "^12.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vite-plugin-dts": "^5.1.1",
+    "vite-plugin-static-copy": "^4.1.1",
+    "vitepress": "^1.0.0"
   }
 }

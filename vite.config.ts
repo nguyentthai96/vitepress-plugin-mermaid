@@ -1,5 +1,3 @@
-// const path = require("path");
-// const { defineConfig } = require("vite");
 import path from "path";
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -12,10 +10,12 @@ export default defineConfig({
         {
           src: "src/Mermaid.vue",
           dest: "./",
+          flatten: true,
         },
         {
           src: "src/mermaid.ts",
           dest: "./",
+          flatten: true,
         },
       ],
     }),
@@ -23,7 +23,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.ts"),
+      entry: path.resolve(import.meta.dirname, "src/index.ts"),
       name: "MermaidPlugin",
       fileName: (format: string) =>
         format == "es"
@@ -31,17 +31,10 @@ export default defineConfig({
           : `vitepress-plugin-mermaid.${format}.js`,
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
       external: [
         "vue",
-        // "markdown-it",
-        // "mermaid",
-        // "@mermaid-js/mermaid-mindmap",
       ],
       output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
         globals: {
           vue: "Vue",
         },

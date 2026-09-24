@@ -95,3 +95,50 @@ const renderChart = async () => {
   svg.value = `${svgCode} <span style="display: none">${salt}</span>`;
 };
 </script>
+
+<style>
+/*
+ * CSS Isolation for Mermaid Diagrams
+ *
+ * VitePress's .vp-doc applies typography styles (font-size, letter-spacing,
+ * line-height, margin) that cascade into Mermaid's SVG foreignObject elements.
+ * This causes text measurement (getBoundingClientRect) to return incorrect values,
+ * resulting in node labels rendered as tiny dots.
+ *
+ * Fix: Reset all inherited CSS on the .mermaid container and its children
+ * to break the cascade chain from .vp-doc styles.
+ */
+
+/* Reset inherited CSS cascade from VitePress .vp-doc */
+.vp-doc .mermaid {
+  all: initial !important;
+  display: block !important;
+  font-family: 'trebuchet ms', verdana, arial, sans-serif !important;
+  font-size: 16px !important;
+  letter-spacing: normal !important;
+  line-height: normal !important;
+  color: inherit !important;
+  visibility: visible !important;
+  margin: 16px 0 !important;
+}
+
+/* Ensure SVG renders responsively */
+.vp-doc .mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Block .vp-doc p/span/div styles from cascading into mermaid foreignObject */
+.vp-doc .mermaid p,
+.vp-doc .mermaid span,
+.vp-doc .mermaid div,
+.vp-doc .mermaid foreignObject p,
+.vp-doc .mermaid foreignObject span,
+.vp-doc .mermaid foreignObject div {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
+  letter-spacing: normal !important;
+  font-size: inherit !important;
+}
+</style>
