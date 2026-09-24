@@ -37,7 +37,55 @@ const props = defineProps({
 const svg = ref(null);
 let mut = null;
 
+/**
+ * Inject a global CSS reset that targets mermaid's temporary measurement
+ * containers BEFORE they are created.
+ *
+ * Mermaid renders by creating temporary <div> elements in document.body
+ * to measure text via getBoundingClientRect(). If VitePress .vp-doc CSS
+ * (e.g. `.vp-doc p { margin: 16px; line-height: 1.8 }`) cascades into
+ * these temp elements, text measurement returns wrong values.
+ *
+ * This stylesheet resets ALL <p>, <span>, <div> inside any element with
+ * id starting with "d" (mermaid's sandbox pattern) and inside .mermaid.
+ */
+const injectMermaidResetCSS = () => {
+  if (document.getElementById('mermaid-css-reset')) return;
+  const style = document.createElement('style');
+  style.id = 'mermaid-css-reset';
+  style.textContent = `
+    /* Reset mermaid sandbox measurement containers */
+    [id^="d"] p, [id^="d"] span, [id^="d"] div,
+    [id^="d"] foreignObject p, [id^="d"] foreignObject span,
+    .mermaid p, .mermaid span, .mermaid div,
+    .mermaid foreignObject p, .mermaid foreignObject span {
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: normal !important;
+      letter-spacing: normal !important;
+      font-size: 16px !important;
+    }
+
+    /* Reset the mermaid container itself */
+    .vp-doc .mermaid {
+      font-size: 16px !important;
+      letter-spacing: normal !important;
+      line-height: normal !important;
+    }
+
+    /* Ensure SVG renders responsively */
+    .vp-doc .mermaid svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  `;
+  document.head.prepend(style);
+};
+
 onMounted(async () => {
+  // Inject CSS reset BEFORE mermaid renders
+  injectMermaidResetCSS();
+
   await init(pluginSettings.value.externalDiagrams);
   let settings = await import("virtual:mermaid-config");
   if (settings?.default) pluginSettings.value = settings.default;
@@ -95,50 +143,3 @@ const renderChart = async () => {
   svg.value = `${svgCode} <span style="display: none">${salt}</span>`;
 };
 </script>
-
-<style>
-/*
- * CSS Isolation for Mermaid Diagrams
- *
- * VitePress's .vp-doc applies typography styles (font-size, letter-spacing,
- * line-height, margin) that cascade into Mermaid's SVG foreignObject elements.
- * This causes text measurement (getBoundingClientRect) to return incorrect values,
- * resulting in node labels rendered as tiny dots.
- *
- * Fix: Reset all inherited CSS on the .mermaid container and its children
- * to break the cascade chain from .vp-doc styles.
- */
-
-/* Reset inherited CSS cascade from VitePress .vp-doc */
-.vp-doc .mermaid {
-  all: initial !important;
-  display: block !important;
-  font-family: 'trebuchet ms', verdana, arial, sans-serif !important;
-  font-size: 16px !important;
-  letter-spacing: normal !important;
-  line-height: normal !important;
-  color: inherit !important;
-  visibility: visible !important;
-  margin: 16px 0 !important;
-}
-
-/* Ensure SVG renders responsively */
-.vp-doc .mermaid svg {
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-/* Block .vp-doc p/span/div styles from cascading into mermaid foreignObject */
-.vp-doc .mermaid p,
-.vp-doc .mermaid span,
-.vp-doc .mermaid div,
-.vp-doc .mermaid foreignObject p,
-.vp-doc .mermaid foreignObject span,
-.vp-doc .mermaid foreignObject div {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: normal !important;
-  letter-spacing: normal !important;
-  font-size: inherit !important;
-}
-</style>
