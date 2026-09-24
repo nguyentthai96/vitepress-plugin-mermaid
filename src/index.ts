@@ -36,10 +36,6 @@ export const withMermaid = (config: UserConfig) => {
     "dayjs",
     "cytoscape-cose-bilkent",
     "cytoscape",
-    // CJS modules that mermaid imports — must be pre-bundled by Vite
-    // to convert CJS default exports to proper ESM default exports.
-    // Without this, production builds fail with:
-    // "does not provide an export named 'default'"
     "elkjs",
   ];
 
@@ -69,11 +65,20 @@ export const withMermaid = (config: UserConfig) => {
     };
   }
 
-  // SSR config: mark CJS-only deps as noExternal so Vite transforms them
+  // SSR config: mark mermaid and its CJS sub-deps as noExternal
   if (!config.vite.ssr) config.vite.ssr = {};
   if (!config.vite.ssr.noExternal) config.vite.ssr.noExternal = [];
   if (Array.isArray(config.vite.ssr.noExternal)) {
     config.vite.ssr.noExternal.push("mermaid");
+  }
+
+  // Build config: ensure Rollup's commonjs plugin properly handles
+  // CJS sub-dependencies of mermaid (fastdom, elkjs, etc.)
+  if (!config.vite.build) config.vite.build = {};
+  if (!config.vite.build.commonjsOptions) config.vite.build.commonjsOptions = {};
+  // Include mermaid's CJS deps in the commonjs transformation
+  if (!config.vite.build.commonjsOptions.include) {
+    config.vite.build.commonjsOptions.include = [/node_modules/];
   }
 
   return config;

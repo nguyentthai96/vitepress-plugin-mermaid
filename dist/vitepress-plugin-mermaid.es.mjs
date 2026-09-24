@@ -77,7 +77,7 @@ var r = (t) => {
 	}))] : t.vite.resolve.alias = {
 		...t.vite.resolve.alias,
 		...i
-	} : t.vite.resolve.alias = i, t.vite.ssr || (t.vite.ssr = {}), t.vite.ssr.noExternal || (t.vite.ssr.noExternal = []), Array.isArray(t.vite.ssr.noExternal) && t.vite.ssr.noExternal.push("mermaid"), t;
+	} : t.vite.resolve.alias = i, t.vite.ssr || (t.vite.ssr = {}), t.vite.ssr.noExternal || (t.vite.ssr.noExternal = []), Array.isArray(t.vite.ssr.noExternal) && t.vite.ssr.noExternal.push("mermaid"), t.vite.build || (t.vite.build = {}), t.vite.build.commonjsOptions || (t.vite.build.commonjsOptions = {}), t.vite.build.commonjsOptions.include || (t.vite.build.commonjsOptions.include = [/node_modules/]), t;
 };
 //#endregion
 export { e as MermaidMarkdown, n as MermaidPlugin, r as withMermaid };
