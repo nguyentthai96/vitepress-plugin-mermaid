@@ -9,7 +9,8 @@
     "build": "vite build && cp dist/src/Mermaid.vue dist/Mermaid.vue && cp dist/src/mermaid.ts dist/mermaid.ts",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:serve": "vitepress serve docs",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

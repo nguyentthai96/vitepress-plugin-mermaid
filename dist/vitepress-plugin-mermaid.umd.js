@@ -1,0 +1,14 @@
+(function(e,t){typeof exports==`object`&&typeof module<`u`?t(exports):typeof define==`function`&&define.amd?define([`exports`],t):(e=typeof globalThis<`u`?globalThis:e||self,t(e.MermaidPlugin={}))})(this,function(e){Object.defineProperty(e,Symbol.toStringTag,{value:`Module`});var t=(e,t)=>{let n=e.renderer.rules.fence.bind(e.renderer.rules);e.renderer.rules.fence=(e,r,i,a,o)=>{let s=e[r];if(s.info.trim()===`mermaid`)try{return`
+      <Suspense> 
+      <template #default>
+      <Mermaid id="mermaid-${r}" class="${t?.class||`mermaid`}" graph="${encodeURIComponent(s.content)}"></Mermaid>
+      </template>
+        <!-- loading state via #fallback slot -->
+        <template #fallback>
+          Loading...
+        </template>
+      </Suspense>`}catch(e){return`<pre>${e}</pre>`}return s.info.trim()===`mmd`&&(e[r].info=`mermaid`),n(e,r,i,a,o)}},n={securityLevel:`loose`,startOnLoad:!1};function r(e){let t={...n,...e},r=`virtual:mermaid-config`,i=`\0`+r;return{name:`vite-plugin-mermaid`,enforce:`post`,transform(e,t){if(t.includes(`vitepress/dist/client/app/index.js`)){e=`
+import Mermaid from 'vitepress-plugin-mermaid/Mermaid.vue';
+`+e;let t=e.split(`
+`),n=t.findIndex(e=>e.includes(`app.component`));return t.splice(n,0,`  app.component("Mermaid", Mermaid);`),e=t.join(`
+`),{code:e,map:null}}},async resolveId(e){if(e===r)return i},async load(e){if(e===i)return`export default ${JSON.stringify(t)};`}}}e.MermaidMarkdown=t,e.MermaidPlugin=r,e.withMermaid=e=>{e.markdown||={};let n=e.markdown.config||(()=>{});e.markdown.config=(...r)=>{t(...r,e.mermaidPlugin),n(...r)},e.vite||={},e.vite.plugins||(e.vite.plugins=[]),e.vite.plugins.push(r(e.mermaid)),e.vite.optimizeDeps||(e.vite.optimizeDeps={}),e.vite.optimizeDeps.include||(e.vite.optimizeDeps.include=[]),e.vite.optimizeDeps.include=[...e.vite.optimizeDeps.include,`mermaid`,`@braintree/sanitize-url`,`dayjs`,`cytoscape-cose-bilkent`,`cytoscape`],e.vite.resolve||(e.vite.resolve={});let i={"dayjs/plugin/advancedFormat.js":`dayjs/esm/plugin/advancedFormat`,"dayjs/plugin/customParseFormat.js":`dayjs/esm/plugin/customParseFormat`,"dayjs/plugin/isoWeek.js":`dayjs/esm/plugin/isoWeek`,"cytoscape/dist/cytoscape.umd.js":`cytoscape/dist/cytoscape.esm.js`};return e.vite.resolve.alias?Array.isArray(e.vite.resolve.alias)?e.vite.resolve.alias=[...e.vite.resolve.alias,...Object.entries(i).map(([e,t])=>({find:e,replacement:t}))]:e.vite.resolve.alias={...e.vite.resolve.alias,...i}:e.vite.resolve.alias=i,e}});
